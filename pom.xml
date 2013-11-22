@@ -161,7 +161,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses />.
                     <version>2.4.2</version>
                     <configuration>
                         <preparationGoals>clean license:check-file-headers license:update-project-license verify</preparationGoals>
-                        <goals>deploy site-deploy</goals>
                     </configuration>
                 </plugin>
             </plugins>
