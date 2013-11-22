@@ -165,112 +165,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses />.
                 </plugin>
             </plugins>
         </pluginManagement>
-        
-        <plugins>
-            <plugin>
-                <groupId>org.twdata.maven</groupId>
-                <artifactId>mojo-executor-maven-plugin</artifactId>
-                <version>2.1.0</version>
-                <inherited>true</inherited>
-                <executions>
-                    <execution>
-                        <id>deploy-checkout-maven-repository</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>execute-mojo</goal>
-                        </goals>
-                        <configuration>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-scm-plugin</artifactId>
-                                <version>1.8.1</version>
-                            </plugin>
-                            <goal>checkout</goal>
-                            <configuration>
-                                <workingDirectory>${project.build.directory}/maven-repository</workingDirectory>
-                                <checkoutDirectory>${project.build.directory}/maven-repository</checkoutDirectory>
-                                <connectionUrl>scm:git:git@github.com:dudie/maven-repository.git</connectionUrl>
-                                <scmVersion>gh-pages</scmVersion>
-                                <scmVersionType>branch</scmVersionType>
-                            </configuration>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>deploy-locally</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>execute-mojo</goal>
-                        </goals>
-                        <configuration>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-deploy-plugin</artifactId>
-                                <version>2.8.1</version>
-                            </plugin>
-                            <goal>deploy</goal>
-                            <configuration>
-                                <altSnapshotDeploymentRepository>local::default::file://${project.build.directory}/maven-repository/snapshots</altSnapshotDeploymentRepository>
-                                <altReleaseDeploymentRepository>local::default::file://${project.build.directory}/maven-repository/releases</altReleaseDeploymentRepository>
-                                <updateReleaseInfo>true</updateReleaseInfo>
-                            </configuration>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>deploy-add-arfifacts</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>execute-mojo</goal>
-                        </goals>
-                        <configuration>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-scm-plugin</artifactId>
-                                <version>1.8.1</version>
-                            </plugin>
-                            <goal>add</goal>
-                            <configuration>
-                                <workingDirectory>${project.build.directory}/maven-repository</workingDirectory>
-                                <includes>**/*</includes>
-                            </configuration>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>deploy-checkin-maven-repository</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>execute-mojo</goal>
-                        </goals>
-                        <configuration>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-scm-plugin</artifactId>
-                                <version>1.8.1</version>
-                            </plugin>
-                            <goal>checkin</goal>
-                            <configuration>
-                                <workingDirectory>${project.build.directory}/maven-repository</workingDirectory>
-                                <developerConnectionUrl>scm:git:git@github.com:dudie/maven-repository.git</developerConnectionUrl>
-                                <message>Deploy ${project.groupId}:${project.artifactId}:${project.version}</message>
-                                <scmVersion>gh-pages</scmVersion>
-                                <scmVersionType>branch</scmVersionType>
-                            </configuration>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+
     </build>
 
     <reporting>
@@ -362,7 +257,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses />.
 
     <profiles>
         <profile>
-            <!--  this profile is activated when using 'mvn release:prepare' and 'mvn release:perform' -->
             <id>release</id>
             <activation>
                 <property>
@@ -394,6 +288,127 @@ along with this program.  If not, see <http://www.gnu.org/licenses />.
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>deploy-to-github</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <!-- 0. Disable default deployment task -->
+            <!-- 1. Checkout the maven-repository hosted on Github to target/maven-repository -->
+            <!-- 2. Deploy artefacts to target/maven-repository/releases -->
+            <!-- 3. Add updated files for commit -->
+            <!-- 4. Push changes to remote repository -->
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-deploy</id>
+                                <configuration>
+                                    <skip>true</skip>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.twdata.maven</groupId>
+                        <artifactId>mojo-executor-maven-plugin</artifactId>
+                        <version>2.1.0</version>
+                        <inherited>true</inherited>
+                        <executions>
+                            <execution>
+                                <id>deploy-checkout-maven-repository</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>execute-mojo</goal>
+                                </goals>
+                                <configuration>
+                                    <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-scm-plugin</artifactId>
+                                        <version>1.8.1</version>
+                                    </plugin>
+                                    <goal>checkout</goal>
+                                    <configuration>
+                                        <workingDirectory>${project.build.directory}/maven-repository</workingDirectory>
+                                        <checkoutDirectory>${project.build.directory}/maven-repository</checkoutDirectory>
+                                        <connectionUrl>scm:git:git@github.com:dudie/maven-repository.git</connectionUrl>
+                                        <scmVersion>gh-pages</scmVersion>
+                                        <scmVersionType>branch</scmVersionType>
+                                    </configuration>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>deploy-locally</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>execute-mojo</goal>
+                                </goals>
+                                <configuration>
+                                    <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-deploy-plugin</artifactId>
+                                        <version>2.8.1</version>
+                                    </plugin>
+                                    <goal>deploy</goal>
+                                    <configuration>
+                                        <altSnapshotDeploymentRepository>local::default::file://${project.build.directory}/maven-repository/snapshots</altSnapshotDeploymentRepository>
+                                        <altReleaseDeploymentRepository>local::default::file://${project.build.directory}/maven-repository/releases</altReleaseDeploymentRepository>
+                                        <updateReleaseInfo>true</updateReleaseInfo>
+                                    </configuration>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>deploy-add-arfifacts</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>execute-mojo</goal>
+                                </goals>
+                                <configuration>
+                                    <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-scm-plugin</artifactId>
+                                        <version>1.8.1</version>
+                                    </plugin>
+                                    <goal>add</goal>
+                                    <configuration>
+                                        <workingDirectory>${project.build.directory}/maven-repository</workingDirectory>
+                                        <includes>**/*</includes>
+                                    </configuration>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>deploy-checkin-maven-repository</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>execute-mojo</goal>
+                                </goals>
+                                <configuration>
+                                    <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-scm-plugin</artifactId>
+                                        <version>1.8.1</version>
+                                    </plugin>
+                                    <goal>checkin</goal>
+                                    <configuration>
+                                        <workingDirectory>${project.build.directory}/maven-repository</workingDirectory>
+                                        <developerConnectionUrl>scm:git:git@github.com:dudie/maven-repository.git</developerConnectionUrl>
+                                        <message>Deploy ${project.groupId}:${project.artifactId}:${project.version}</message>
+                                        <scmVersion>gh-pages</scmVersion>
+                                        <scmVersionType>branch</scmVersionType>
+                                    </configuration>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
