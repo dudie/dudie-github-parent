@@ -103,6 +103,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses />.
     </repository>
   </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>dudie-github-releases</id>
+      <name>Dudie releases by Cloudbees</name>
+      <url>https://raw.github.com/dudie/maven-repository/releases</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+    <pluginRepository>
+      <id>dudie-github-snapshots</id>
+      <name>Dudie snapshots hosted on Github</name>
+      <url>https://raw.github.com/dudie/maven-repository/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
   <distributionManagement>
     <repository>
       <id>dudie-github-releases</id>
