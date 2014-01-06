@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses />.
 
   <groupId>fr.dudie</groupId>
   <artifactId>dudie-github-parent</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>2</version>
   <packaging>pom</packaging>
 
   <name>Dudie parent POM</name>
@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses />.
     <url>git@github.com:dudie/dudie-github-parent.git</url>
     <connection>scm:git:git@github.com:dudie/dudie-github-parent.git</connection>
     <developerConnection>scm:git:git@github.com:dudie/dudie-github-parent.git</developerConnection>
-    <tag>1</tag>
+    <tag>v2</tag>
   </scm>
 
   <issueManagement>
