@@ -228,6 +228,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses />.
             <arguments>-Pcheck-system-language</arguments>
             <preparationGoals>clean license:check-file-header license:update-project-license verify</preparationGoals>
           </configuration>
+          <dependencies>
+            <dependency>
+               <groupId>org.apache.maven.scm</groupId>
+               <artifactId>maven-scm-api</artifactId>
+               <version>1.8.1</version>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.maven.scm</groupId>
+              <artifactId>maven-scm-provider-gitexe</artifactId>
+              <version>1.8.1</version>
+            </dependency>
+          </dependencies>
         </plugin>
       </plugins>
     </pluginManagement>
