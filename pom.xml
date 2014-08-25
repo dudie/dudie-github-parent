@@ -154,7 +154,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses />.
             <failOnMissingHeader>true</failOnMissingHeader>
             <failOnNotUptodateHeader>true</failOnNotUptodateHeader>
             <processStartTag>[license]</processStartTag>
-            <sectionDelimiter>----</sectionDelimiter>
+            <sectionDelimiter>- - - -</sectionDelimiter>
             <processEndTag>[/license]</processEndTag>
           </configuration>
         </plugin>
